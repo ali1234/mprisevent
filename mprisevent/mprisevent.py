@@ -12,13 +12,12 @@ import gi.repository.GLib
 
 def properties_changed(url, auth, *args, **kwargs):
     if 'Metadata' in args[1]:
-        md = dict(args[1]['Metadata'])
+        md = args[1]['Metadata']
         if 'xesam:url' in md:
             try:
                 year = ' ' + md.get('xesam:contentCreated')[:4] + ' '
             except KeyError:
                 year = ' '
-
             now_playing = '"{track}" by {artist}, on their{year}album "{album}"'.format(
                 track = md.get('xesam:title', 'Unknown Track'),
                 artist = ', '.join(md.get('xesam:artist', ['Unknown Artist'])),
@@ -27,7 +26,8 @@ def properties_changed(url, auth, *args, **kwargs):
             )
             print(now_playing)
             params = (('mount', '/Music'), ('mode', 'updinfo'), ('song', now_playing),)
-            requests.get(url, params=params, auth=auth, timeout=1)
+            r = requests.get(url, params=params, auth=auth, timeout=1)
+            print(r.url)
 
 
 def main():
