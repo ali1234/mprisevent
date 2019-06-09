@@ -69,7 +69,7 @@ def properties_changed(url, auth, *args, **kwargs):
 
 def main():
     parser = argparse.ArgumentParser(description='MPRIS to Icecast bridge.')
-    parser.add_argument('url', type=str, help='URL to Icecast server.')
+    parser.add_argument('url', type=str, help="URL to Icecast server in http://url:port/admin/metadata format")
     parser.add_argument('username', type=str, help='Username')
     parser.add_argument('password', type=str, help='Password')
 
