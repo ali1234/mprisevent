@@ -18,11 +18,12 @@ def properties_changed(url, auth, *args, **kwargs):
                 year = ' ' + md.get('xesam:contentCreated')[:4] + ' '
             except KeyError:
                 year = ' '
-            now_playing = '"{track}" by {artist}, on their{year}album "{album}"'.format(
+            now_playing = '"{track}" by {artist}, on their{year}album "{album}". {comment}'.format(
                 track = md.get('xesam:title', 'Unknown Track'),
                 artist = ', '.join(md.get('xesam:artist', ['Unknown Artist'])),
                 year = year,
-                album = md.get('xesam:album', 'Unknown Album')
+                album = md.get('xesam:album', 'Unknown Album'),
+                comment = md.get('xesam:comment')[0].replace('・', '- ')
             )
             print(now_playing)
             params = (('mount', '/Music'), ('mode', 'updinfo'), ('song', now_playing),)
