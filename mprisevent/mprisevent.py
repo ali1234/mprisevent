@@ -22,12 +22,9 @@ def properties_changed(url, auth, *args, **kwargs):
                     year = ' '
             else:
                 year = ' '
-            if 'xesam:title': 
-                try:
-                    track = md.get('xesam:title', 'Unknown Track'),
-                except KeyError:
-                    track = ' ' 
-            else:
+            try:
+                track = md.get('xesam:title')
+            except KeyError:
                 track = ' ' 
             if 'xesam:artist':
                 try:
@@ -44,12 +41,16 @@ def properties_changed(url, auth, *args, **kwargs):
             else:
                 album = ' '
             if 'xesam:comment':
-                try:
-                    comment = md.get('xesam:comment')[0].replace('・', '- ')
-                except KeyError:
-                    comment = ' ' 
+                if md.get('xesam:comment'):
+                    try:
+                        comment = md.get('xesam:comment')[0].replace('・', '- ')
+                    except KeyError:
+                        comment = ' ' 
+                else: comment = ' '
             else: comment = ' '
-            now_playing = '"{track}" by {artist}, on their{year}album "{album}". {comment}'.format(
+            if comment is not ' ':
+                comment = " -- " + comment
+            now_playing = '"{track}" by {artist}, on their{year}album "{album}" {comment}'.format(
                 track = track, 
                 artist = artist, 
                 year = year,
@@ -58,8 +59,12 @@ def properties_changed(url, auth, *args, **kwargs):
             )
             print(now_playing)
             params = (('mount', '/Music'), ('mode', 'updinfo'), ('song', now_playing),)
-            r = requests.get(url, params=params, auth=auth, timeout=1)
-            print(r.url)
+            try:
+                requests.get(url, params=params, auth=auth, timeout=1)
+            except (requests.exceptions.RequestException, ConnectionResetError) as err:
+                print('An error happened and was ignored:')
+                print(err)
+                print('Will try to update again at next song change.')
 
 
 def main():
