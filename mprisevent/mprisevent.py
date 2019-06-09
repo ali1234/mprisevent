@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import datetime
 from functools import partial
@@ -64,3 +65,5 @@ def main():
 
     mloop = gi.repository.GLib.MainLoop()
     mloop.run()
+
+if __name__ == '__main__': main()
