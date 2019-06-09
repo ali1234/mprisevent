@@ -15,26 +15,40 @@ def properties_changed(url, auth, *args, **kwargs):
     if 'Metadata' in args[1]:
         md = args[1]['Metadata']
         if 'xesam:url' in md:
-            try:
-                year = ' ' + md.get('xesam:contentCreated')[:4] + ' '
-            except KeyError:
+            if 'xesam:contentCreated' in md:
+                try:
+                    year = ' ' + md.get('xesam:contentCreated')[:4] + ' '
+                except KeyError:
+                    year = ' '
+            else:
                 year = ' '
-            try:
-                track = md.get('xesam:title', 'Unknown Track'),
-            except KeyError:
+            if 'xesam:title': 
+                try:
+                    track = md.get('xesam:title', 'Unknown Track'),
+                except KeyError:
+                    track = ' ' 
+            else:
                 track = ' ' 
-            try:
-                artist = ', '.join(md.get('xesam:artist', ['Unknown Artist']))
-            except KeyError:
+            if 'xesam:artist':
+                try:
+                    artist = ', '.join(md.get('xesam:artist', ['Unknown Artist']))
+                except KeyError:
+                    artist = ' ' 
+            else:
                 artist = ' ' 
-            try:
-                album = md.get('xesam:album', 'Unknown Album')
-            except KeyError:
-                album = ' ' 
-            try:
-                comment = md.get('xesam:comment')[0].replace('・', '- ')
-            except KeyError:
-                comment = ' ' 
+            if 'xesam:album':
+                try:
+                    album = md.get('xesam:album', 'Unknown Album')
+                except KeyError:
+                    album = ' ' 
+            else:
+                album = ' '
+            if 'xesam:comment':
+                try:
+                    comment = md.get('xesam:comment')[0].replace('・', '- ')
+                except KeyError:
+                    comment = ' ' 
+            else: comment = ' '
             now_playing = '"{track}" by {artist}, on their{year}album "{album}". {comment}'.format(
                 track = track, 
                 artist = artist, 
